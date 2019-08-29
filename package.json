@@ -1,0 +1,43 @@
+{
+  "name": "frontend-project-lvl3-by-baseven",
+  "version": "0.0.0",
+  "description": "RSS feed with automatic updates",
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "test": "jest",
+    "build": "NODE_ENV=production babel src --out-dir dist --source-maps inline",
+    "prepublishOnly": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/baseven/frontend-project-lvl3.git"
+  },
+  "keywords": [
+    "educational project",
+    "News Feed (RSS)"
+  ],
+  "author": "Vladislav Akashev",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/baseven/frontend-project-lvl3/issues"
+  },
+  "homepage": "https://github.com/baseven/frontend-project-lvl3#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.5.5",
+    "@babel/core": "^7.5.5",
+    "@babel/node": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "babel-eslint": "^10.0.3",
+    "babel-jest": "^24.9.0",
+    "eslint": "^6.2.2",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-babel": "^5.3.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jest": "^22.15.2",
+    "jest": "^24.9.0",
+    "jest-cli": "^24.9.0"
+  }
+}
