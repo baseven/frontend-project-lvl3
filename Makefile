@@ -1,17 +1,15 @@
-install:
+develop:
+	npx webpack-dev-server
+
+install-deps:
 	npm install
 
-test:
-	npm test
-
-test-coverage:
-	npm test -- --coverage
-
-test-watch:
-	npm test -- --watch
+build:
+	rm -rf dist
+	NODE_ENV=production npx webpack
 
 lint:
 	npx eslint .
 
-publish:
-	npm publish	--dry-run
+.PHONY: 
+	test

@@ -10,6 +10,8 @@ plugins:
 env:
   node: true
   jest: true
+  browser: true
+
 
 # https://github.com/babel/babel-eslint
 parser: babel-eslint
