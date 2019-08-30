@@ -7,7 +7,8 @@
     "dist"
   ],
   "scripts": {
-    "build": "webpack"
+    "build": "webpack",
+    "deploy": "npx surge ./dist/ spiffy-crow.surge.sh"
   },
   "repository": {
     "type": "git",

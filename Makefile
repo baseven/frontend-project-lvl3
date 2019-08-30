@@ -1,3 +1,6 @@
+deploy:
+	npm run deploy
+
 develop:
 	npx webpack-dev-server
 
