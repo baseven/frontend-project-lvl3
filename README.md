@@ -3,7 +3,7 @@
 
 # frontend-project-lvl3
 ## Domain
-spiffy-crow.surge.sh
+http://spiffy-crow.surge.sh/
 
 ## Description
 *place description*

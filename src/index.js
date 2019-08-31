@@ -1,3 +1,2 @@
-import init from './init';
-
-init();
+import '@babel/polyfill';
+import 'bootstrap';
