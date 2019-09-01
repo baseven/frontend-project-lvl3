@@ -1,8 +1,10 @@
-deploy:
-	npm run deploy
+install: install-deps install-flow-typed
 
 develop:
-	npx webpack-dev-server --open
+	npx webpack-dev-server
+
+deploy:
+	npm run deploy
 
 install-deps:
 	npm install
@@ -11,8 +13,13 @@ build:
 	rm -rf dist
 	NODE_ENV=production npx webpack
 
+test:
+	npm test
+
 lint:
 	npx eslint .
 
-.PHONY: 
-	test
+publish:
+	npm publish
+
+.PHONY: test
