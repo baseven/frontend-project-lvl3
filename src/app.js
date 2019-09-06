@@ -1,41 +1,39 @@
 import { watch } from 'melanke-watchjs';
 import getRender from './renders';
 import parser from './parser';
-import { isValidity, getData } from './utils';
+import { isValidity, getFeedData } from './utils';
 
 // pocess: 'initialization', 'validation', 'processing', 'publication', 'error reporting'
 export default (element) => {
   const state = {
-    input: {
-      url: '',
-      urlValidity: true,
-      clientSideValidity: true, // отображается только после нажатия button
-    },
-    newsFeedLinks: [],
-    newsFeedList: {},
+    url: '',
+    urlValidity: true,
+    dataValidity: true, // отображается только после нажатия button clientSideValidity
+    newsFeedList: [],
     state4: false,
   };
 
-  // необходимо доваить элемент для clientSideValidity
+  // необходимо добавить элемент для clientSideValidity
   const inputElement = element.querySelector('#input');
   const buttonElement = element.querySelector('#button-addon2');
   const newsFeedListElement = element.querySelector('#newsFeedList');
-  const clientSideValidityElement = element.querySelector('#feedback');
+  const dataValidityElement = element.querySelector('#dataError');
 
   // наблюдение за state
-  watch(state, 'input', () => {
+  watch(state, 'url', () => {
     const render = getRender('input');
-    render(state.input, inputElement);
+    render(state.url, state.urlValidity, inputElement);
   });
 
-  watch(state, 'clientSideValidity', () => {
-    const render = getRender('clientSideValidity');
-    render(state.input.clientSideValidity, clientSideValidityElement);
+  watch(state, 'dataValidity', () => {
+    const render = getRender('dataValidity');
+    render(state.dataValidity, dataValidityElement);
   });
 
   watch(state, 'newsFeedList', () => {
     const render = getRender('newsFeedList');
-    render(state.input.url, newsFeedListElement);
+    // const newsFeed = st
+    render(state.url, state.newsFeedList, newsFeedListElement);
   });
 
   // обработчики событий
@@ -48,9 +46,9 @@ export default (element) => {
      * Это изменение state приводит к вызову render, который отслеживает input.
      * В противном случае ничего не происходит.
      */
-    state.input.clientSideValidity = true;
-    state.input.url = event.target.value;
-    state.input.urlValidity = isValidity(state.input.url, state.newsFeedLinks);
+    // state.input.clientSideValidity = true;
+    state.url = event.target.value;
+    state.urlValidity = isValidity(state.url, state.newsFeedList);
   };
 
   const buttonHandle = () => {
@@ -68,18 +66,44 @@ export default (element) => {
      * очищается и система переходит в первоначальное состояние, но с обновленным newsFeedList.
      * Начальное состояние также подразумевает, что state.input.url = null clientSideValidity = true
      */
-    if (!state.input.urlValidity) {
-      state.input.clientSideValidity = false;
+    state.urlValidity = isValidity(state.url, state.newsFeedList);
+    console.log(state.urlValidity);
+    if (!state.urlValidity) {
+      state.dataValidity = false;
     } else {
       // { newsFeed: [article1, article2, ..., arcticleN] }
-      const data = getData(state.input.url);
-      const newsFeed = parser(data);
-      state.newsFeedLinks.push(Object.keys(newsFeed)[0]);
-      state.newsFeedList.push(newsFeed);
-      state.input.url = '';
+      console.log(state.dataValidity);
+      state.dataValidity = true;
+      getFeedData(state.url)
+        .then((data) => {
+          console.log('yeap');
+          console.log(data);
+          const parse = parser(data);
+          console.log('parse:');
+          console.log(parse);
+          const newsFeed = {};
+          newsFeed[state.url] = parse;
+          // state.newsFeedList.push(newsFeed);
+          console.log('newsFeed:');
+          console.log(newsFeed);
+          state.newsFeedList.push(newsFeed);
+        });
+      // state.input.url = ''; возможно, стоит использовать placeholdre для очистки
     }
   };
 
   inputElement.addEventListener('input', inputHandle);
   buttonElement.addEventListener('click', buttonHandle);
 };
+
+/**
+ * getData(state.input.url)
+        .then((data) => {
+          console.log('after then');
+          console.log(data);
+          const newsFeed = parser(data);
+          state.newsFeedLinks.push(Object.keys(newsFeed)[0]);
+          state.newsFeedList.push(newsFeed);
+          console.log(state.newsFeedList);
+        });
+ */
