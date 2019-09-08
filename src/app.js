@@ -1,109 +1,95 @@
 import { watch } from 'melanke-watchjs';
 import getRender from './renders';
-import parser from './parser';
-import { isValidity, getFeedData } from './utils';
 
-// pocess: 'initialization', 'validation', 'processing', 'publication', 'error reporting'
+import { isUrlValidity, isDuplicateValidity, getFeedAttributes } from './utils';
+
 export default (element) => {
   const state = {
     url: '',
-    urlValidity: true,
-    dataValidity: true, // отображается только после нажатия button clientSideValidity
-    newsFeedList: [],
-    state4: false,
+    validity: {
+      url: true,
+      duplicate: true,
+      data: true,
+    },
+    errorMessage: '',
+    feedList: [],
   };
 
-  // необходимо добавить элемент для clientSideValidity
   const inputElement = element.querySelector('#input');
   const buttonElement = element.querySelector('#button-addon2');
-  const newsFeedListElement = element.querySelector('#newsFeedList');
-  const dataValidityElement = element.querySelector('#dataError');
+  const errorMessageElement = element.querySelector('#errorMessage');
+  const feedListElement = element.querySelector('#feedList');
 
-  // наблюдение за state
   watch(state, 'url', () => {
-    const render = getRender('input');
-    render(state.url, state.urlValidity, inputElement);
+    const render = getRender('inputBorder');
+    render(state.url, state.validity, inputElement);
   });
 
-  watch(state, 'dataValidity', () => {
-    const render = getRender('dataValidity');
-    render(state.dataValidity, dataValidityElement);
+  watch(state, 'errorMessage', () => {
+    const inputBorderRender = getRender('inputBorder');
+    inputBorderRender(state.url, state.validity, inputElement);
+
+    const errorMessageRender = getRender('errorMessage');
+    errorMessageElement.textContent = state.errorMessage;
+    errorMessageRender(state.errorMessage, errorMessageElement);
   });
 
-  watch(state, 'newsFeedList', () => {
-    const render = getRender('newsFeedList');
-    // const newsFeed = st
-    render(state.url, state.newsFeedList, newsFeedListElement);
+  watch(state, 'feedList', () => {
+    const render = getRender('feedList');
+    render(state.url, state.feedList, feedListElement);
   });
 
-  // обработчики событий
   const inputHandle = (event) => {
-    /**
-     * Перед проверкой url происходит переключение clientSideValidity на true
-     * Осуществляем проверку переданного url на валидность.
-     * Если url не проходит проверку, то изменяем state,
-     * переключая urlValidity в false.
-     * Это изменение state приводит к вызову render, который отслеживает input.
-     * В противном случае ничего не происходит.
-     */
-    // state.input.clientSideValidity = true;
+    state.validity.data = true;
+    state.errorMessage = '';
     state.url = event.target.value;
-    state.urlValidity = isValidity(state.url, state.newsFeedList);
+    console.log('state.url:');
+    console.log(state.url);
+    state.validity.url = isUrlValidity(state.url);
+    console.log('state.validity.url:');
+    console.log(state.validity.url);
+    state.validity.duplicate = isDuplicateValidity(state.url, state.feedList);
+    console.log('state.validity.duplicate:');
+    console.log(state.validity.duplicate);
+    console.log('---------');
   };
 
   const buttonHandle = () => {
-    /**
-     * Если текущее состояние urlValidity false,
-     * то изменяем состояние state, переключая clientSideValidity на false,
-     * что приводит к вызову renderError и выводится сообщение об ошибке.
-     * -
-     * В противном случае парсим данные по ссылке state.input.url.
-     * Операция parser(state.input.url) асинхронная!
-     * Если данные соответствуют <здесь проверка> проверке на валидность,
-     * то изменяем state, добавляя в newsFeedLinks и newsFeedList новые значения.
-     * Это изменение state приводит к вызову renderFeedsList, который отображает newsFeedList.
-     * Далее (после выполнения асинхронной операции parser(state.input.url)) текстовое поле input
-     * очищается и система переходит в первоначальное состояние, но с обновленным newsFeedList.
-     * Начальное состояние также подразумевает, что state.input.url = null clientSideValidity = true
-     */
-    state.urlValidity = isValidity(state.url, state.newsFeedList);
-    console.log(state.urlValidity);
-    if (!state.urlValidity) {
-      state.dataValidity = false;
-    } else {
-      // { newsFeed: [article1, article2, ..., arcticleN] }
-      console.log(state.dataValidity);
-      state.dataValidity = true;
-      getFeedData(state.url)
-        .then((data) => {
-          console.log('yeap');
-          console.log(data);
-          const parse = parser(data);
-          console.log('parse:');
-          console.log(parse);
-          const newsFeed = {};
-          newsFeed[state.url] = parse;
-          // state.newsFeedList.push(newsFeed);
-          console.log('newsFeed:');
-          console.log(newsFeed);
-          state.newsFeedList.push(newsFeed);
-        });
-      // state.input.url = ''; возможно, стоит использовать placeholdre для очистки
+    if (!state.validity.url) {
+      state.errorMessage = 'The URL is not correct';
+      return;
     }
+    if (!state.validity.duplicate) {
+      state.errorMessage = 'The URL is already in use';
+      return;
+    }
+
+    getFeedAttributes(state.url)
+      .then((feedAttributes) => {
+        console.log('feedAttributes:');
+        console.log(feedAttributes);
+        console.log('______');
+        const feed = {};
+        feed[state.url] = feedAttributes;
+        state.feedList.push(feed);
+        state.errorMessage = '';
+      })
+      .catch((e) => {
+        state.validity.data = false;
+        if (!e.response) {
+          state.errorMessage = 'The data type does not match text/xml';
+        }
+        const { status, statusText } = e.response;
+        state.errorMessage = `${status} error: ${statusText}`;
+      });
   };
 
   inputElement.addEventListener('input', inputHandle);
   buttonElement.addEventListener('click', buttonHandle);
 };
-
 /**
- * getData(state.input.url)
-        .then((data) => {
-          console.log('after then');
-          console.log(data);
-          const newsFeed = parser(data);
-          state.newsFeedLinks.push(Object.keys(newsFeed)[0]);
-          state.newsFeedList.push(newsFeed);
-          console.log(state.newsFeedList);
-        });
+ * RSS links:
+ * https://rss.nytimes.com/services/xml/rss/nyt/Health.xml
+ * http://feeds.bbci.co.uk/sport/football/rss.xml?edition=uk
+ * https://rss.nytimes.com/services/xml/rss/nyt/Science.xml
  */

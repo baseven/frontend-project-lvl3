@@ -1,41 +1,53 @@
 import { isURL } from 'validator';
 import axios from 'axios';
+import parser from './parser';
 
-/**
- * Валидация дублей:
- * Если url уже входит в состав links, то вернуть false
- * Валидация URL
- * Если url пустой или проходит проверку isURL, то вернуть true
- */
-const isValidity = (url, newsFeedList) => {
-  console.log('!!!');
-  console.log('newsFeedList');
-  console.log(newsFeedList);
-  console.log('-----');
+const isUrlValidity = url => !url || isURL(url);
 
+const isDuplicateValidity = (url, newsFeedList) => {
   const links = newsFeedList.map(obj => Object.keys(obj)).flat();
-  console.log('links');
-  console.log(links);
-  console.log('-----');
   if (links.includes(url)) {
     return false;
   }
-  return !url || isURL(url);
+  return true;
 };
 
-/**
- * https://corsproxy.github.io/
- * For example, if you wanted to grab the Google homepage, your code would request
- * https://crossorigin.me/https://google.com
- */
-const getData = (url) => { // стоит добавить просто return
-  axios.get(`https://crossorigin.me/${url}`)
-    .then(response => response)
-    .catch(error => error);
+const getPostAttributes = (post) => {
+  const attributes = post.children;
+  const postTitle = attributes[0].textContent;
+  const postDescription = attributes[1].textContent;
+  const postLink = attributes[2].textContent;
+
+  return { postTitle, postDescription, postLink };
 };
 
-const getFeedData = url => (
-  axios(`https://cors-anywhere.herokuapp.com/${url}`).then(response => response.data)
-);
+const makePostsList = (elements) => {
+  const posts = elements.map(element => getPostAttributes(element));
+  return posts;
+};
 
-export { isValidity, getData, getFeedData };
+const formFeedAttributes = (data) => {
+  const doc = parser(data);
+
+  const title = doc.querySelector('title').textContent;
+  const description = doc.querySelector('description').textContent;
+  const itemElements = doc.querySelectorAll('item');
+
+  const items = [...itemElements];
+  const posts = makePostsList(items);
+
+  return { title, description, posts };
+};
+
+// const corsOrigin = 'https://crossorigin.me/'; не работает
+const corsHeroku = 'https://cors-anywhere.herokuapp.com/';
+
+const getXmlData = url => axios.get(`${corsHeroku}${url}`).then(response => response.data);
+
+const getFeedAttributes = url => getXmlData(url).then(data => formFeedAttributes(data));
+
+export {
+  isUrlValidity,
+  isDuplicateValidity,
+  getFeedAttributes,
+};

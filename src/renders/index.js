@@ -1,12 +1,12 @@
-import inputRender from './inputRender';
-import feedsListRender from './feedsListRender';
+import inputBorderRender from './inputBorderRender';
+import feedListRender from './feedListRender';
 import errorMessageRender from './errorMessageRender';
 
 export default (type) => {
   const renderTypes = {
-    input: inputRender,
-    newsFeedList: feedsListRender,
-    dataValidity: errorMessageRender,
+    inputBorder: inputBorderRender,
+    feedList: feedListRender,
+    errorMessage: errorMessageRender,
   };
 
   return renderTypes[type];
