@@ -5,10 +5,10 @@
  */
 
 export default (link, validity, element) => {
-  const { url, duplicate, data } = validity;
-  const isValid = url && duplicate && data;
+  const { url, duplicate } = validity;
 
-  const [currentClass, previousClass] = isValid ? ['is-valid', 'is-invalid'] : ['is-invalid', 'is-valid'];
+  const isLinkValid = url && duplicate;
+  const [currentClass, previousClass] = isLinkValid ? ['is-valid', 'is-invalid'] : ['is-invalid', 'is-valid'];
 
   if (!link) {
     element.classList.remove(previousClass);

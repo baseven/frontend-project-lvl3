@@ -1,54 +1,53 @@
 import _ from 'lodash';
 
 export default (link, data, element) => {
-  console.log('data:');
-  console.log(data);
-  console.log('------');
-
   const newsFeedAttr = data.find(feed => _.has(feed, link))[link];
-  console.log('newsFeedAttr:');
-  console.log(newsFeedAttr);
-  console.log('------');
-  // const { title, description, posts } = newsFeedAttr;
   const { title, description, posts } = newsFeedAttr;
 
-  // Создаем элемент div с классом jumbotron
-  const divEl = document.createElement('div');
-  divEl.classList.add('jumbotron');
+  // Создание области newsFeed
+  const jumbotron = document.createElement('div');
+  jumbotron.classList.add('jumbotron');
 
-  // Создаем элементы: h3, p, ul
-  const h3El = document.createElement('h3');
-  h3El.textContent = title;
+  // Создание header для newsFeed, состоящего из title, description.
+  const feedTitle = document.createElement('h3');
+  feedTitle.textContent = title;
 
-  const pEl = document.createElement('p');
-  pEl.textContent = description;
+  const feedDescription = document.createElement('p');
+  feedDescription.textContent = description;
 
-  const ulEl = document.createElement('ul');
-  ulEl.setAttribute('id', link);
+  // Создание body для newsFeed, состоящего из маркированнго списка link
+  // Каждый элемент списка начинается с тега <li> и является постом
+  const feedLink = document.createElement('ul');
+  feedLink.setAttribute('id', link);
 
-  // создание списка постов
   posts.forEach((post) => {
-    const { postTitle, postLink } = post; // { postTitle, postDescription, postLink }
+    const { postTitle, postDescription, postLink } = post;
 
-    // Создаем элемент a и присваиваем атрибуту href значение postLink
-    const aEl = document.createElement('a');
-    aEl.setAttribute('href', postLink);
-    aEl.textContent = postTitle;
+    const aElement = document.createElement('a');
+    aElement.setAttribute('href', postLink);
+    aElement.textContent = postTitle;
 
-    // Создаем элемент li
-    const liEl = document.createElement('li');
-    // Добавляем aEl в конец списка childNodes элемента liEl
-    liEl.append(aEl);
-    // Добавляем liEl в конец списка childNodes элемента ulEl
-    ulEl.append(liEl);
+    const buttonElement = document.createElement('button');
+    buttonElement.setAttribute('type', 'button');
+    buttonElement.classList.add('btn', 'btn-info', 'btn-sm');
+    buttonElement.setAttribute('data-toggle', 'modal');
+    buttonElement.setAttribute('data-target', '#modalPost');
+    buttonElement.setAttribute('data-title', postTitle);
+    buttonElement.setAttribute('data-description', postDescription);
+    buttonElement.textContent = 'Read more';
+
+    const liElement = document.createElement('li');
+    liElement.append(aElement);
+    liElement.append(buttonElement);
+
+    feedLink.append(liElement);
   });
 
-  // Добавляем divUl, divP, divH3 в конец списка childNodes элемента divEl
-  divEl.append(h3El);
-  divEl.append(pEl);
-  divEl.append(ulEl);
-  // Добавляем divEl в конец списка childNodes элемента element
-  element.append(divEl);
+  jumbotron.append(feedTitle);
+  jumbotron.append(feedDescription);
+  jumbotron.append(feedLink);
+
+  element.append(jumbotron);
 };
 
 /* использовать что-то подобное для создания списка
@@ -56,10 +55,10 @@ export default (link, data, element) => {
     // Создаем текстовый узел
     const textNode = document.createTextNode(notebook.model);
     // Создаем элемент li
-    const liEl = document.createElement('li');
-    // Добавляем textNode в конец списка childNodes элемента liEl
-    liEl.append(textNode);
-    // Добавляем liEl в конец списка childNodes элемента ulEl у notebooksList
-    notebooksList.append(liEl);
+    const liElement = document.createElement('li');
+    // Добавляем textNode в конец списка childNodes элемента liElement
+    liElement.append(textNode);
+    // Добавляем liElement в конец списка childNodes элемента feedLink у notebooksList
+    notebooksList.append(liElement);
   });
 */
