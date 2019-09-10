@@ -14,8 +14,8 @@ export default (element) => {
     errorMessage: '',
     feedList: [],
     modalPost: {
-      title: '',
-      description: '',
+      postTitle: '',
+      postDescription: '',
     },
   };
 
@@ -105,8 +105,7 @@ export default (element) => {
     const postTitle = button.data('title');
     const postDescription = button.data('description');
 
-    state.modalPost.title = postTitle;
-    state.modalPost.description = postDescription;
+    state.modalPost = { postTitle, postDescription };
   });
 
   inputElement.addEventListener('input', inputHandle);

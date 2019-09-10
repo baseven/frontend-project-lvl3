@@ -37,6 +37,7 @@ export default (link, data, element) => {
     buttonElement.textContent = 'Read more';
 
     const liElement = document.createElement('li');
+    liElement.classList.add('list-group-item');
     liElement.append(aElement);
     liElement.append(buttonElement);
 

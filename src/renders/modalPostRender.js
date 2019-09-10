@@ -1,9 +1,9 @@
 export default (post, element) => {
-  const { title, description } = post;
+  const { postTitle, postDescription } = post;
 
-  const modalTitle = element.find('.modal-title');
-  modalTitle.text = title;
+  const modalTitle = element.find('.modal-title')[0];
+  modalTitle.textContent = postTitle;
 
-  const modalDescription = element.find('.modal-description > p');
-  modalDescription.text = description;
+  const modalDescription = element.find('.modal-body > p')[0];
+  modalDescription.textContent = postDescription;
 };
