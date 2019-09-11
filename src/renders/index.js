@@ -1,5 +1,5 @@
 import inputBorderRender from './inputBorderRender';
-import feedListRender from './feedListRender';
+import feedsListRender from './feedsListRender2';
 import errorMessageRender from './errorMessageRender';
 import inputValueRender from './inputValueRender';
 import modalPostRender from './modalPostRender';
@@ -8,7 +8,7 @@ export default (type) => {
   const renderTypes = {
     inputBorder: inputBorderRender,
     inputValue: inputValueRender,
-    feedList: feedListRender,
+    feedsList: feedsListRender,
     errorMessage: errorMessageRender,
     modalPost: modalPostRender,
   };

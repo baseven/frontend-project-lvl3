@@ -1,8 +1,8 @@
 import _ from 'lodash';
 
-export default (link, data, element) => {
-  const newsFeedAttr = data.find(feed => _.has(feed, link))[link];
-  const { title, description, posts } = newsFeedAttr;
+export default (link, feedsList, element) => {
+  const feedAttributes = feedsList.find(feed => _.has(feed, link))[link];
+  const { title, description, posts } = feedAttributes;
 
   // Создание области newsFeed
   const jumbotron = document.createElement('div');
@@ -18,6 +18,7 @@ export default (link, data, element) => {
   // Создание body для newsFeed, состоящего из маркированнго списка link
   // Каждый элемент списка начинается с тега <li> и является постом
   const feedLink = document.createElement('ul');
+  feedLink.classList.add('list-group');
   feedLink.setAttribute('id', link);
 
   posts.forEach((post) => {

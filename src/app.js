@@ -1,7 +1,12 @@
 import $ from 'jquery';
 import { watch } from 'melanke-watchjs';
 import getRender from './renders';
-import { isUrlValidity, isDuplicateValidity, getFeedAttributes } from './utils';
+import {
+  isUrlValidity,
+  isDuplicateValidity,
+  getFeedAttributes,
+  makeUpdate,
+} from './utils';
 
 export default (element) => {
   const state = {
@@ -12,7 +17,7 @@ export default (element) => {
     },
     dataValidity: false,
     errorMessage: '',
-    feedList: [],
+    feedsList: [],
     modalPost: {
       postTitle: '',
       postDescription: '',
@@ -22,7 +27,7 @@ export default (element) => {
   const inputElement = element.querySelector('#input');
   const buttonElement = element.querySelector('#button-addon2');
   const errorMessageElement = element.querySelector('#errorMessage');
-  const feedListElement = element.querySelector('#feedList');
+  const feedsListElement = element.querySelector('#feedsList');
   const modalPostElement = $('#modalPost');
 
   watch(state, 'url', () => {
@@ -44,9 +49,9 @@ export default (element) => {
     errorMessageRender(state.errorMessage, errorMessageElement);
   });
 
-  watch(state, 'feedList', () => {
-    const render = getRender('feedList');
-    render(state.url, state.feedList, feedListElement);
+  watch(state, 'feedsList', () => {
+    const render = getRender('feedsList');
+    render(state.feedsList, feedsListElement);
   });
 
   watch(state, 'modalPost', () => {
@@ -63,7 +68,7 @@ export default (element) => {
     state.linkValidity.url = isUrlValidity(state.url);
     console.log('state.linkValidity.url:');
     console.log(state.linkValidity.url);
-    state.linkValidity.duplicate = isDuplicateValidity(state.url, state.feedList);
+    state.linkValidity.duplicate = isDuplicateValidity(state.url, state.feedsList);
     console.log('state.linkValidity.duplicate:');
     console.log(state.linkValidity.duplicate);
     console.log('---------');
@@ -86,7 +91,7 @@ export default (element) => {
         console.log('______');
         const feed = {};
         feed[state.url] = feedAttributes;
-        state.feedList.push(feed);
+        state.feedsList.unshift(feed);
         state.dataValidity = true;
         state.errorMessage = '';
       })
@@ -107,6 +112,8 @@ export default (element) => {
 
     state.modalPost = { postTitle, postDescription };
   });
+
+  setInterval(() => makeUpdate(state.feedsList), 5000);
 
   inputElement.addEventListener('input', inputHandle);
   buttonElement.addEventListener('click', buttonHandle);
