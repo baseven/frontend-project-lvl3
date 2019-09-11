@@ -1,9 +1,3 @@
-/**
- * Возможный минус данного рендера:
- * Мы не отслеживаем состояние валидности элемента (is-valid или is-invalid)
- * и лишь устанавливаем текущее значение на основании validity.
- */
-
 export default (link, validity, element) => {
   const { url, duplicate } = validity;
 

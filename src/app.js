@@ -5,7 +5,7 @@ import {
   isUrlValidity,
   isDuplicateValidity,
   getFeedAttributes,
-  makeUpdate,
+  updateFeedsList,
 } from './utils';
 
 export default (element) => {
@@ -45,7 +45,6 @@ export default (element) => {
     inputBorderRender(state.url, state.linkValidity, inputElement);
 
     const errorMessageRender = getRender('errorMessage');
-    errorMessageElement.textContent = state.errorMessage;
     errorMessageRender(state.errorMessage, errorMessageElement);
   });
 
@@ -63,15 +62,9 @@ export default (element) => {
     state.dataValidity = false;
     state.errorMessage = '';
     state.url = event.target.value;
-    console.log('state.url:');
-    console.log(state.url);
+
     state.linkValidity.url = isUrlValidity(state.url);
-    console.log('state.linkValidity.url:');
-    console.log(state.linkValidity.url);
     state.linkValidity.duplicate = isDuplicateValidity(state.url, state.feedsList);
-    console.log('state.linkValidity.duplicate:');
-    console.log(state.linkValidity.duplicate);
-    console.log('---------');
   };
 
   const buttonHandle = () => {
@@ -86,12 +79,10 @@ export default (element) => {
 
     getFeedAttributes(state.url)
       .then((feedAttributes) => {
-        console.log('feedAttributes:');
-        console.log(feedAttributes);
-        console.log('______');
         const feed = {};
         feed[state.url] = feedAttributes;
         state.feedsList.unshift(feed);
+
         state.dataValidity = true;
         state.errorMessage = '';
       })
@@ -113,7 +104,7 @@ export default (element) => {
     state.modalPost = { postTitle, postDescription };
   });
 
-  setInterval(() => makeUpdate(state.feedsList), 5000);
+  setInterval(() => updateFeedsList(state.feedsList), 5000);
 
   inputElement.addEventListener('input', inputHandle);
   buttonElement.addEventListener('click', buttonHandle);

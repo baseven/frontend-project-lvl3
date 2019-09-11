@@ -1,5 +1,5 @@
 import inputBorderRender from './inputBorderRender';
-import feedsListRender from './feedsListRender2';
+import feedsListRender from './feedsListRender';
 import errorMessageRender from './errorMessageRender';
 import inputValueRender from './inputValueRender';
 import modalPostRender from './modalPostRender';

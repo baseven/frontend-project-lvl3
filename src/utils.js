@@ -64,14 +64,14 @@ const updateLink = (link, feedsList) => {
   });
 };
 
-const makeUpdate = (feedsList) => {
-  const feedLinks = feedsList.map(feed => Object.keys(feed)).flat();
-  feedLinks.forEach(link => updateLink(link, feedsList));
+const updateFeedsList = (feedsList) => {
+  const links = feedsList.map(feed => Object.keys(feed)).flat();
+  links.forEach(link => updateLink(link, feedsList));
 };
 
 export {
   isUrlValidity,
   isDuplicateValidity,
   getFeedAttributes,
-  makeUpdate,
+  updateFeedsList,
 };

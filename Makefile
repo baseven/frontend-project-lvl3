@@ -1,25 +1,20 @@
-install: install-deps install-flow-typed
+install:
+	npm install
 
 develop:
-	npx webpack-dev-server
+	npx webpack-dev-server 
 
 deploy:
 	npm run deploy
-
-install-deps:
-	npm install
 
 build:
 	rm -rf dist
 	NODE_ENV=production npx webpack
 
-test:
-	npm test
-
 lint:
 	npx eslint .
 
 publish:
-	npm publish
+	npm publish --dry-run
 
 .PHONY: test

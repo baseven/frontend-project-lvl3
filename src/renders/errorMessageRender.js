@@ -3,5 +3,5 @@ export default (errorMessage, element) => {
 
   element.classList.remove(previousClass);
   element.classList.add(currentClass);
-  // element.textContent = errorMessage; Assignment to property of function parameter 'element'.
+  element.textContent = errorMessage;
 };

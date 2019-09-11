@@ -1,25 +1,20 @@
 {
-  "name": "webpack-package",
-  "version": "0.0.1",
-  "description": "",
+  "name": "frontend-project-lvl3-by-va",
+  "version": "0.0.2",
+  "description": "Project News Feed (RSS)",
   "scripts": {
-    "test": "jest",
     "deploy": "npx surge ./dist/ spiffy-crow.surge.sh"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hexlet-boilerplates/webpack-package.git"
+    "url": "git+https://github.com/baseven/frontend-project-lvl3.git"
   },
-  "author": "Kirill Mokevnin",
+  "author": "Vladislav Akashev",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/hexlet-boilerplates/webpack-package/issues"
+    "url": "https://github.com/baseven/frontend-project-lvl3/issues"
   },
-  "homepage": "https://github.com/hexlet-boilerplates/webpack-package#readme",
-  "jest": {
-    "verbose": true,
-    "testURL": "http://localhost/"
-  },
+  "homepage": "https://github.com/baseven/frontend-project-lvl3#readme",
   "dependencies": {
     "@babel/polyfill": "^7.2.5",
     "autoprefixer": "^9.6.1",
@@ -28,6 +23,8 @@
     "jquery": "^3.4.1",
     "lodash": "^4.17.15",
     "melanke-watchjs": "^1.5.0",
+    "popper.js": "^1.15.0",
+    "sass": "^1.23.0-module.beta.1",
     "validator": "^11.1.0"
   },
   "devDependencies": {
