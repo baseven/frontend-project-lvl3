@@ -109,9 +109,3 @@ export default (element) => {
   inputElement.addEventListener('input', inputHandle);
   buttonElement.addEventListener('click', buttonHandle);
 };
-/**
- * RSS links:
- * https://rss.nytimes.com/services/xml/rss/nyt/Health.xml
- * http://feeds.bbci.co.uk/sport/football/rss.xml?edition=uk
- * https://rss.nytimes.com/services/xml/rss/nyt/Science.xml
- */
