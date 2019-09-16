@@ -3,5 +3,5 @@ export default (errorMessage, element) => {
 
   element.classList.remove(previousClass);
   element.classList.add(currentClass);
-  element.textContent = errorMessage;
+  element.textContent = errorMessage; // eslint-disable-line no-param-reassign
 };

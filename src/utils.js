@@ -13,37 +13,10 @@ const isDuplicateValidity = (url, feedsList) => {
   return true;
 };
 
-const getPostAttributes = (post) => {
-  const attributes = post.children;
-  const postTitle = attributes[0].textContent;
-  const postDescription = attributes[1].textContent;
-  const postLink = attributes[2].textContent;
-
-  return { postTitle, postDescription, postLink };
-};
-
-const makePostsList = (elements) => {
-  const posts = elements.map(element => getPostAttributes(element));
-  return posts;
-};
-
-const formFeedAttributes = (data) => {
-  const doc = parser(data);
-
-  const title = doc.querySelector('title').textContent;
-  const description = doc.querySelector('description').textContent;
-  const itemElements = doc.querySelectorAll('item');
-
-  const items = [...itemElements];
-  const posts = makePostsList(items);
-
-  return { title, description, posts };
-};
-
 // const corsOrigin = 'https://crossorigin.me/'; не работает
 const corsHeroku = 'https://cors-anywhere.herokuapp.com/';
 const getXmlData = url => axios.get(`${corsHeroku}${url}`).then(response => response.data);
-const getFeedAttributes = url => getXmlData(url).then(data => formFeedAttributes(data));
+const getFeedAttributes = url => getXmlData(url).then(data => parser(data));
 
 const updateLink = (link, feedsList) => {
   const currentFeed = feedsList.find(feed => _.has(feed, link));
